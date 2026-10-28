@@ -859,3 +859,13 @@ body.dark-mode .empty-message {
 .edit-btn:hover {
   background-color: #1d4ed8;
 }
+/* Amélioration du bouton Modifier */
+.edit-btn {
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+} 
