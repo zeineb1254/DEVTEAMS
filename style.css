@@ -630,3 +630,70 @@ td strong {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* COMMIT 4 : Amélioration de l'expérience utilisateur */
+
+/* Meilleure séparation des champs */
+.form-grid label {
+  position: relative;
+}
+
+.form-grid input:hover,
+.form-grid select:hover,
+.form-grid textarea:hover {
+  border-color: #93b4f5;
+}
+
+/* Mise en valeur des champs obligatoires */
+.form-grid label {
+  line-height: 1.5;
+}
+
+/* Date et filtres plus lisibles */
+input[type="date"] {
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+}
+
+/* Amélioration des boutons du formulaire */
+.form-actions {
+  padding-top: 15px;
+  border-top: 1px solid #edf2f7;
+}
+
+.form-actions .btn {
+  min-height: 43px;
+}
+
+/* Date du jour */
+.today {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+/* Lisibilité des titres */
+.panel-heading h3,
+.list-heading h3 {
+  letter-spacing: -0.3px;
+}
+
+/* Zone de recherche */
+.filters input[type="search"] {
+  background-color: #f8fafc;
+}
+
+.filters input[type="search"]:focus {
+  background-color: #ffffff;
+}
+
+/* Animation douce des champs */
+input,
+select,
+textarea {
+  transition: all 0.2s ease;
+}
