@@ -697,3 +697,71 @@ select,
 textarea {
   transition: all 0.2s ease;
 }
+
+/* COMMIT 5 : Amélioration du tableau et des détails visuels */
+
+/* En-tête du tableau plus élégant */
+.table-wrap thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Espacement et lisibilité des lignes */
+.table-wrap tbody tr:nth-child(even) {
+  background-color: #fbfdff;
+}
+
+.table-wrap tbody tr:nth-child(even):hover,
+.table-wrap tbody tr:hover {
+  background-color: #eff6ff;
+}
+
+/* Mise en valeur du nom du stagiaire */
+.table-wrap td strong {
+  font-weight: 700;
+}
+
+/* Bouton supprimer plus visible au clavier */
+.delete-btn:focus-visible {
+  outline: 3px solid #fca5a5;
+  outline-offset: 3px;
+}
+
+/* Cartes avec une bordure plus douce */
+.stat-card,
+.panel {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel:hover {
+  border-color: #cbdaf0;
+}
+
+/* Message lorsqu'aucun résultat n'est trouvé */
+.empty-message {
+  line-height: 1.8;
+  background: #fbfdff;
+}
+
+/* Pied de page plus clair */
+.footer-note {
+  line-height: 1.8;
+  letter-spacing: 0.2px;
+}
+
+/* Meilleure adaptation aux petits écrans */
+@media (max-width: 720px) {
+  .table-wrap {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .form-actions .btn {
+    min-height: 44px;
+  }
+
+  .filters input,
+  .filters select {
+    min-height: 44px;
+  }
+}
