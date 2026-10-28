@@ -13,6 +13,7 @@ const toast = document.getElementById("toast");
 
 let absences = loadAbsences();
 let toastTimeout;
+let editingId = null;
 
 document.getElementById("todayDate").textContent = new Intl.DateTimeFormat("fr-FR", {
   weekday: "long", day: "numeric", month: "long", year: "numeric"
@@ -80,8 +81,10 @@ function renderAbsences() {
       <td>${escapeHTML(item.type)}</td>
       <td><span class="status ${statusClass(item.status)}">${escapeHTML(item.status)}</span></td>
       <td>${escapeHTML(item.reason || "—")}</td>
-      <td><button class="delete-btn" type="button" data-delete-id="${item.id}" aria-label="Supprimer l'absence de ${escapeHTML(item.name)}">Supprimer</button></td>
-    </tr>
+      <td>
+    <button class="edit-btn" type="button" data-edit-id="${item.id}">Modifier</button>
+    <button class="delete-btn" type="button" data-delete-id="${item.id}">Supprimer</button>
+    </td>
   `).join("");
 
   emptyMessage.hidden = filtered.length > 0;
@@ -91,17 +94,19 @@ function renderAbsences() {
   renderStats();
 }
 
+
 form.addEventListener("submit", event => {
   event.preventDefault();
+
   const name = nameInput.value.trim();
+
   if (!name) {
     nameInput.focus();
     showToast("Veuillez saisir le nom du stagiaire.");
     return;
   }
 
-  const absence = {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+  const absenceData = {
     name,
     date: dateInput.value,
     type: typeInput.value,
@@ -109,23 +114,72 @@ form.addEventListener("submit", event => {
     reason: reasonInput.value.trim()
   };
 
-  absences.unshift(absence);
+  if (editingId !== null) {
+    absences = absences.map(item =>
+      item.id === editingId
+        ? { ...item, ...absenceData }
+        : item
+    );
+
+    editingId = null;
+    showToast("Absence modifiée avec succès.");
+  } else {
+    absences.unshift({
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      ...absenceData
+    });
+
+    showToast("Absence ajoutée avec succès.");
+  }
+
   saveAbsences();
   renderAbsences();
   form.reset();
   dateInput.value = new Date().toISOString().slice(0, 10);
   statusInput.value = "En attente";
-  showToast("Absence ajoutée avec succès.");
-  nameInput.focus();
+  form.querySelector('button[type="submit"]').textContent = "+ Ajouter l'absence";
 });
 
+
+
 tableBody.addEventListener("click", event => {
-  const button = event.target.closest("[data-delete-id]");
-  if (!button) return;
-  const confirmed = window.confirm("Voulez-vous vraiment supprimer cette absence ?");
+  const editButton = event.target.closest("[data-edit-id]");
+
+  if (editButton) {
+    const absence = absences.find(
+      item => item.id === editButton.dataset.editId
+    );
+
+    if (!absence) return;
+
+    editingId = absence.id;
+    nameInput.value = absence.name;
+    dateInput.value = absence.date;
+    typeInput.value = absence.type;
+    statusInput.value = absence.status;
+    reasonInput.value = absence.reason || "";
+
+    form.querySelector('button[type="submit"]').textContent =
+      "Enregistrer les modifications";
+
+    form.scrollIntoView({ behavior: "smooth" });
+    showToast("Modifiez les informations puis enregistrez.");
+    return;
+  }
+
+  const deleteButton = event.target.closest("[data-delete-id]");
+  if (!deleteButton) return;
+
+  const confirmed = window.confirm(
+    "Voulez-vous vraiment supprimer cette absence ?"
+  );
+
   if (!confirmed) return;
 
-  absences = absences.filter(item => item.id !== button.dataset.deleteId);
+  absences = absences.filter(
+    item => item.id !== deleteButton.dataset.deleteId
+  );
+
   saveAbsences();
   renderAbsences();
   showToast("Absence supprimée.");
@@ -135,28 +189,34 @@ searchInput.addEventListener("input", renderAbsences);
 statusFilter.addEventListener("change", renderAbsences);
 
 renderAbsences();
+
+searchInput.addEventListener("input", renderAbsences);
+statusFilter.addEventListener("change", renderAbsences);
+
+renderAbsences();
+
 // Dark Mode / Light Mode
 const themeToggle = document.getElementById("themeToggle");
 
-// Charger le thème sauvegardé
-const savedTheme = localStorage.getItem("theme");
+if (themeToggle) {
+    const savedTheme = localStorage.getItem("theme");
 
-if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    themeToggle.textContent = "☀️ Light Mode";
-}
-
-// Changer le thème au clic
-themeToggle.addEventListener("click", function () {
-    document.body.classList.toggle("dark-mode");
-
-    const isDarkMode = document.body.classList.contains("dark-mode");
-
-    if (isDarkMode) {
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
         themeToggle.textContent = "☀️ Light Mode";
-        localStorage.setItem("theme", "dark");
-    } else {
-        themeToggle.textContent = "🌙 Dark Mode";
-        localStorage.setItem("theme", "light");
     }
-});
+
+    themeToggle.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        const isDarkMode = document.body.classList.contains("dark-mode");
+
+        if (isDarkMode) {
+            themeToggle.textContent = "☀️ Light Mode";
+            localStorage.setItem("theme", "dark");
+        } else {
+            themeToggle.textContent = "🌙 Dark Mode";
+            localStorage.setItem("theme", "light");
+        }
+    });
+}
