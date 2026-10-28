@@ -135,3 +135,28 @@ searchInput.addEventListener("input", renderAbsences);
 statusFilter.addEventListener("change", renderAbsences);
 
 renderAbsences();
+// Dark Mode / Light Mode
+const themeToggle = document.getElementById("themeToggle");
+
+// Charger le thème sauvegardé
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    themeToggle.textContent = "☀️ Light Mode";
+}
+
+// Changer le thème au clic
+themeToggle.addEventListener("click", function () {
+    document.body.classList.toggle("dark-mode");
+
+    const isDarkMode = document.body.classList.contains("dark-mode");
+
+    if (isDarkMode) {
+        themeToggle.textContent = "☀️ Light Mode";
+        localStorage.setItem("theme", "dark");
+    } else {
+        themeToggle.textContent = "🌙 Dark Mode";
+        localStorage.setItem("theme", "light");
+    }
+});
