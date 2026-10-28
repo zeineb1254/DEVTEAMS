@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AbsenceFacile — Gestion des absences</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">AF</div>
+      <div>
+        <h1>AbsenceFacile</h1>
+        <p>Gestion simple des absences</p>
+      </div>
+    </div>
+    <span class="top-tag">Espace établissement</span>
+  </header>
+
+  <main class="container">
+    <section class="welcome">
+      <div>
+        <p class="eyebrow">TABLEAU DE BORD</p>
+        <h2>Suivi des absences</h2>
+        <p class="muted">Ajoutez, consultez et gérez les absences des stagiaires au même endroit.</p>
+      </div>
+      <div class="today" id="todayDate"></div>
+    </section>
+
+    <section class="stats" aria-label="Statistiques">
+      <article class="stat-card">
+        <span class="stat-label">Total des absences</span>
+        <strong id="totalCount">0</strong>
+        <span class="stat-note">Toutes les absences enregistrées</span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">En attente</span>
+        <strong id="pendingCount">0</strong>
+        <span class="stat-note">À vérifier par l'administration</span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Justifiées</span>
+        <strong id="justifiedCount">0</strong>
+        <span class="stat-note">Avec justificatif</span>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h3>Enregistrer une absence</h3>
+          <p class="muted">Les champs marqués d'un * sont obligatoires.</p>
+        </div>
+      </div>
+      <form id="absenceForm">
+        <div class="form-grid">
+          <label>
+            Nom complet *
+            <input type="text" id="studentName" placeholder="Ex. Sara El Amrani" required maxlength="80">
+          </label>
+          <label>
+            Date d'absence *
+            <input type="date" id="absenceDate" required>
+          </label>
+          <label>
+            Type d'absence *
+            <select id="absenceType" required>
+              <option value="">Choisir un type</option>
+              <option value="Retard">Retard</option>
+              <option value="Demi-journée">Demi-journée</option>
+              <option value="Journée complète">Journée complète</option>
+            </select>
+          </label>
+          <label>
+            Statut *
+            <select id="absenceStatus" required>
+              <option value="En attente">En attente</option>
+              <option value="Justifiée">Justifiée</option>
+              <option value="Non justifiée">Non justifiée</option>
+            </select>
+          </label>
+          <label class="full-width">
+            Motif (facultatif)
+            <textarea id="absenceReason" rows="2" placeholder="Ex. Rendez-vous, raison personnelle..." maxlength="240"></textarea>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">+ Ajouter l'absence</button>
+          <button class="btn btn-light" type="reset">Effacer</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="list-heading">
+        <div>
+          <h3>Liste des absences</h3>
+          <p class="muted">Recherchez un stagiaire ou filtrez par statut.</p>
+        </div>
+        <div class="filters">
+          <input type="search" id="searchInput" placeholder="Rechercher un nom..." aria-label="Rechercher un nom">
+          <select id="statusFilter" aria-label="Filtrer par statut">
+            <option value="">Tous les statuts</option>
+            <option value="En attente">En attente</option>
+            <option value="Justifiée">Justifiée</option>
+            <option value="Non justifiée">Non justifiée</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Stagiaire</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Statut</th>
+              <th>Motif</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="absenceTableBody"></tbody>
+        </table>
+        <p id="emptyMessage" class="empty-message">Aucune absence enregistrée pour le moment.</p>
+      </div>
+    </section>
+    <p class="footer-note">AbsenceFacile · Projet pédagogique HTML, CSS et JavaScript</p>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
